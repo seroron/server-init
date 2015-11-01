@@ -1,0 +1,9 @@
+startup_message off
+
+shelltitle "$ |bash"
+hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %Y/%m/%d %c "
+hardstatus off
+
+termcapinfo xterm* ti@:te@
+
+escape ^Tt
