@@ -9,5 +9,5 @@ Install
 ```
 git clone https://github.com/seroron/server-init.git
 cd server-init
-./setup.sh
+./setup.sh all
 ```

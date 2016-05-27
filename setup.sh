@@ -1,79 +1,38 @@
 #!/bin/bash
 
-BASE_DIR=`pwd`
-
-setup_init()
-{
-    mkdir -p ~/.bashrc.d
-    fgrep "if [ -d ~/.bashrc.d ]" ~/.bashrc >/dev/null || 
-	cat >> ~/.bashrc <<EOF
-
-### begin auto add 
-if [ -d ~/.bashrc.d ]; then
-  for i in ~/.bashrc.d/*.sh; do
-    if [ -r \$i ]; then
-	. \$i
-    fi
-  done
-  unset i
-fi
-### end auto add
-
-EOF
-
-    cp -v -r -f ${BASE_DIR}/files/.??* ~/
-}
-
-setup_emacs()
-{
-    rm -fr ~/.emacs.d
-    git clone https://github.com/seroron/.emacs.d.git
-    cd .emacs.d/
-    make
-}
-
-setup_ruby()
-{
-    rm -fr .rbenv
-    git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-    git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
-
-    cat > ~/.bashrc.d/rbenv.sh <<EOF
-export PATH="\$HOME/.rbenv/bin:\$PATH"
-eval "\$(rbenv init -)"
-EOF
-
-    source ${HOME}/.bashrc.d/rbenv.sh
-    echo source "${HOME}/.bashrc.d/rbenv.sh"
-    RBENV_RUBY_VER=$(rbenv install --list | grep -v '-' | tail -1)
-
-    rbenv install $RBENV_RUBY_VER
-    rbenv global $RBENV_RUBY_VER
-}
-
-setup_nodejs()
-{
-    curl -L git.io/nodebrew | perl - setup
-
-    cat > ~/.bashrc.d/nodebrew.sh <<EOF
-export PATH=\$HOME/.nodebrew/current/bin:\$PATH
-EOF
-    source ~/.bashrc.d/nodebrew.sh
-    
-    nodebrew install-binary latest
-    nodebrew use latest
-    npm install -g brew
-}
-
 show_help()
 {
-    echo "Usage: ./setup.sh <command>"
-    echo " command:"    
-    egrep -o "^setup_[^\(\)]+\(\)$" $0 | sed -E 's/setup_([^\(]+)\(\)/    \1/g'
+    echo "Usage: ./setup.sh <role>"
+    echo ""
+    echo "Enable roles:"
+    echo "   all <- execute all roles"
+    for i in `ls roles/ | sed -E 's/^[0-9]+_//g'`; do
+        echo "   $i"
+    done
 }
 
-if type setup_$1 1>/dev/null 2>/dev/null; then
-    setup_$1
+if [ $# -ne 1 ]; then
+    show_help
+    
+elif [ $1 = "all" ]; then
+    for i in roles/*/setup.sh; do
+        echo "execute: $i"
+        bash $i
+    done
+
 else
-    show_help    
+    b=0
+    for i in roles/*; do
+        r=$(echo $i | sed -E 's/^roles\/[0-9]+_//g')
+        if [ "$r" = "$1" -a -f "$i/setup.sh" ]; then
+           b=1
+           echo "execute: $i"
+           bash $i
+        fi
+    done
+
+    if [ $b -eq 0 ]; then
+        echo "role '$1' is not found."
+        show_help
+    fi
 fi
