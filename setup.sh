@@ -26,8 +26,8 @@ else
         r=$(echo $i | sed -E 's/^roles\/[0-9]+_//g')
         if [ "$r" = "$1" -a -f "$i/setup.sh" ]; then
            b=1
-           echo "execute: $i"
-           bash $i
+           echo "execute: $i/setup.sh"
+           bash $i/setup.sh
         fi
     done
 
