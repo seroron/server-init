@@ -20,4 +20,14 @@ fi
 
 EOF
 
+fgrep "### begin auto add" ~/.inputrc >/dev/null 2>&1 || 
+    cat >> ~/.inputrc <<EOF
+
+### begin auto add 
+set bell-style none
+### end auto add
+
+EOF
+
+
 cp -v -r -f ${BASE_DIR}/files/.??* ~/
