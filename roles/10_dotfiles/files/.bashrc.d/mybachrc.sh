@@ -30,3 +30,5 @@ else
     # linux
     alias ls='ls -F'
 fi
+
+export PATH=$HOME/.bin:$PATH
