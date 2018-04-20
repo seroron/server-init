@@ -11,16 +11,18 @@ HISTFILESIZE=10000
 # term color
 export TERM=xterm-256color
 
-# ps1
-[ -r /usr/local/etc/bash_completion.d/git-prompt.sh ] && . /usr/local/etc/bash_completion.d/git-prompt.sh
-[ -r /usr/local/etc/bash_completion.d/git-completion.bash ] && . /usr/local/etc/bash_completion.d/git-completion.bash
+# git
+. $(find /usr/ -name "git-prompt.sh" 2>/dev/null | head -1)
+. $(find /usr/ -name "git-completion.bash" 2>/dev/null | head -1)
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 
+# ps1
 PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\] <\j>$(__git_ps1)\[\033[00m\]\n\$ '
 
+# alias
 if [ "$(uname)" == 'Darwin' ]; then
     # mac
     alias ls='ls -FG'
@@ -39,4 +41,5 @@ else
     fi
 fi
 
+# path
 export PATH=$HOME/.bin:$PATH
