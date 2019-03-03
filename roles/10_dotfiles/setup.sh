@@ -31,3 +31,7 @@ EOF
 
 
 cp -v -r -f ${BASE_DIR}/files/.??* ~/
+
+# git
+curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.bashrc.d/git-completion.sh
+curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > ~/.bashrc.d/git-prompt.sh

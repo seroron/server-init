@@ -12,15 +12,17 @@ HISTFILESIZE=10000
 export TERM=xterm-256color
 
 # git
-. $(find /usr/ -name "git-prompt.sh" 2>/dev/null | head -1)
-. $(find /usr/ -name "git-completion.bash" 2>/dev/null | head -1)
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 
 # ps1
-PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\] <\j>$(__git_ps1)\[\033[00m\]\n\$ '
+if which kubectl >/dev/null 2>&1; then
+    PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\] <\j>$(__git_ps1) (k8s:$(kubectl config current-context))\[\033[00m\]\n\$ '
+else
+    PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\] <\j>$(__git_ps1)\[\033[00m\]\n\$ '
+fi
 
 # alias
 if [ "$(uname)" == 'Darwin' ]; then
